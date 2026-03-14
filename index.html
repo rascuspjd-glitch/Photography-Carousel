@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Photography Carousel</title>
-
+<title>Photography Carousel - Native Size</title>
 <style>
   body {
     margin: 0;
@@ -17,12 +16,13 @@
   }
 
   .carousel {
-    width: 90%;
-    max-width: 900px;
     overflow: hidden;
     position: relative;
     border-radius: 10px;
-    background: #000; /* prevents empty space around smaller images */
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .track {
@@ -32,13 +32,9 @@
 
   .track img {
     flex-shrink: 0;
-    max-width: 100%;
-    height: auto;       /* maintain native aspect ratio */
-    object-fit: contain; /* scale image without cropping or stretching */
     display: block;
   }
 
-  /* Buttons */
   .prev, .next {
     position: absolute;
     top: 50%;
@@ -56,7 +52,6 @@
   .prev { left: 10px; }
   .next { right: 10px; }
 
-  /* Dots */
   .dots {
     position: absolute;
     bottom: 15px;
@@ -120,8 +115,11 @@ window.addEventListener('load', () => {
   });
 
   function updateCarousel() {
-    const slideWidth = slides[0].clientWidth;
-    track.style.transform = `translateX(-${index * slideWidth}px)`;
+    let offset = 0;
+    for (let i = 0; i < index; i++) {
+      offset += slides[i].naturalWidth; // sum widths of all previous slides
+    }
+    track.style.transform = `translateX(-${offset}px)`;
 
     const dots = dotsContainer.querySelectorAll("span");
     dots.forEach(dot => dot.classList.remove("active"));
@@ -145,7 +143,7 @@ window.addEventListener('load', () => {
   // Initialize
   updateCarousel();
 
-  // Responsive
+  // Handle resize
   window.addEventListener("resize", updateCarousel);
 });
 </script>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Carousel</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial, sans-serif;
+background:#f4f4f4;
+}
+
+.carousel{
+position:relative;
+max-width:900px;
+margin:auto;
+overflow:hidden;
+border-radius:10px;
+}
+
+.carousel-track{
+display:flex;
+transition:transform .5s ease;
+}
+
+.carousel img{
+width:100%;
+flex-shrink:0;
+}
+
+.carousel-btn{
+position:absolute;
+top:50%;
+transform:translateY(-50%);
+background:rgba(0,0,0,.5);
+border:none;
+color:white;
+font-size:28px;
+padding:10px 16px;
+cursor:pointer;
+border-radius:6px;
+}
+
+.prev{left:10px;}
+.next{right:10px;}
+
+.carousel-dots{
+position:absolute;
+bottom:15px;
+left:50%;
+transform:translateX(-50%);
+display:flex;
+gap:8px;
+}
+
+.carousel-dots span{
+width:12px;
+height:12px;
+background:#ccc;
+border-radius:50%;
+cursor:pointer;
+}
+
+.carousel-dots span.active{
+background:white;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="carousel">
+
+<div class="carousel-track" id="track">
+
+<!-- clone last -->
+<img src="https://drive.google.com/uc?export=view&id=10YMKqi0w9pQRiPDeZYMjT0jh77zacWrw">
+
+<img src="https://drive.google.com/uc?export=view&id=14IRcLz32-JKd2XAjfjgRSle8f6biYcoZ">
+<img src="https://drive.google.com/uc?export=view&id=1jeVmIqE32_VCnRQsr17VGBv-IQNtIHM5">
+<img src="https://drive.google.com/uc?export=view&id=17Cwb6m4sHRu4B_LoCdeX65JXoPM-QTVT">
+<img src="https://drive.google.com/uc?export=view&id=1HWNN5XlIxgrSb-pI8xRzZjHNRhJpm3Em">
+<img src="https://drive.google.com/uc?export=view&id=1kQHi3BI8fNSrkgNYCi-BJ9qHaktJppE3">
+<img src="https://drive.google.com/uc?export=view&id=1FOQf41Vg4TLJ8Gj8ehVFTwGzVXGGv0mn">
+<img src="https://drive.google.com/uc?export=view&id=10YMKqi0w9pQRiPDeZYMjT0jh77zacWrw">
+<img src="https://drive.google.com/uc?export=view&id=1QPnjWjVx8wotqCO24XlpvBUaQt1xGrZ9">
+
+<!-- clone first -->
+<img src="https://drive.google.com/uc?export=view&id=14IRcLz32-JKd2XAjfjgRSle8f6biYcoZ">
+
+</div>
+
+<button class="carousel-btn prev">❮</button>
+<button class="carousel-btn next">❯</button>
+
+<div class="carousel-dots" id="dots"></div>
+
+</div>
+
+<script>
+
+const track = document.getElementById("track")
+const slides = track.querySelectorAll("img")
+const prev = document.querySelector(".prev")
+const next = document.querySelector(".next")
+const dotsContainer = document.getElementById("dots")
+
+const realSlideCount = slides.length - 2
+
+let index = 1
+let slideWidth = slides[0].clientWidth
+
+track.style.transform = `translateX(-${slideWidth * index}px)`
+
+function createDots(){
+for(let i=0;i<realSlideCount;i++){
+const dot=document.createElement("span")
+
+if(i===0) dot.classList.add("active")
+
+dot.addEventListener("click",()=>{
+index=i+1
+moveCarousel()
+})
+
+dotsContainer.appendChild(dot)
+}
+}
+
+createDots()
+
+function updateDots(){
+
+const dots=dotsContainer.querySelectorAll("span")
+dots.forEach(dot=>dot.classList.remove("active"))
+
+let dotIndex=index-1
+
+if(dotIndex<0) dotIndex=realSlideCount-1
+if(dotIndex>=realSlideCount) dotIndex=0
+
+dots[dotIndex].classList.add("active")
+
+}
+
+function moveCarousel(){
+
+slideWidth=slides[0].clientWidth
+
+track.style.transition="transform .5s ease"
+track.style.transform=`translateX(-${slideWidth * index}px)`
+
+updateDots()
+
+}
+
+next.onclick=()=>{
+index++
+moveCarousel()
+}
+
+prev.onclick=()=>{
+index--
+moveCarousel()
+}
+
+track.addEventListener("transitionend",()=>{
+
+if(index===slides.length-1){
+track.style.transition="none"
+index=1
+track.style.transform=`translateX(-${slideWidth * index}px)`
+}
+
+if(index===0){
+track.style.transition="none"
+index=slides.length-2
+track.style.transform=`translateX(-${slideWidth * index}px)`
+}
+
+})
+
+window.addEventListener("resize",()=>{
+slideWidth=slides[0].clientWidth
+track.style.transform=`translateX(-${slideWidth * index}px)`
+})
+
+setInterval(()=>{
+index++
+moveCarousel()
+},4000)
+
+</script>
+
+</body>
+</html>

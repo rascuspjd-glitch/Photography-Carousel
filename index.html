@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Photography Carousel</title>
+
 <style>
   body {
     margin: 0;
@@ -21,6 +22,7 @@
     overflow: hidden;
     position: relative;
     border-radius: 10px;
+    background: #000; /* prevents empty space around smaller images */
   }
 
   .track {
@@ -29,8 +31,10 @@
   }
 
   .track img {
-    width: 100%; /* responsive width */
     flex-shrink: 0;
+    max-width: 100%;
+    height: auto;       /* maintain native aspect ratio */
+    object-fit: contain; /* scale image without cropping or stretching */
     display: block;
   }
 
@@ -89,17 +93,19 @@
     <img src="Image8.jpg" alt="Image 8">
   </div>
 
-  <button class="prev" onclick="move(-1)">❮</button>
-  <button class="next" onclick="move(1)">❯</button>
+  <button class="prev">❮</button>
+  <button class="next">❯</button>
 
   <div class="dots" id="dots"></div>
 </div>
 
 <script>
-window.addEventListener('load', () => {  // wait until all images are loaded
+window.addEventListener('load', () => {
   const track = document.getElementById("track");
   const slides = document.querySelectorAll(".track img");
   const dotsContainer = document.getElementById("dots");
+  const prevBtn = document.querySelector(".prev");
+  const nextBtn = document.querySelector(".next");
   let index = 0;
 
   // Create dots
@@ -114,7 +120,7 @@ window.addEventListener('load', () => {  // wait until all images are loaded
   });
 
   function updateCarousel() {
-    const slideWidth = slides[0].clientWidth; // now guaranteed to be correct
+    const slideWidth = slides[0].clientWidth;
     track.style.transform = `translateX(-${index * slideWidth}px)`;
 
     const dots = dotsContainer.querySelectorAll("span");
@@ -129,15 +135,15 @@ window.addEventListener('load', () => {  // wait until all images are loaded
     updateCarousel();
   }
 
+  // Buttons
+  prevBtn.addEventListener("click", () => move(-1));
+  nextBtn.addEventListener("click", () => move(1));
+
+  // Autoplay every 4 seconds
+  setInterval(() => move(1), 4000);
+
   // Initialize
   updateCarousel();
-
-  // Buttons
-  document.querySelector(".prev").addEventListener("click", () => move(-1));
-  document.querySelector(".next").addEventListener("click", () => move(1));
-
-  // Autoplay
-  setInterval(() => move(1), 4000);
 
   // Responsive
   window.addEventListener("resize", updateCarousel);

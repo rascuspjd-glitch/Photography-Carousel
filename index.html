@@ -96,46 +96,52 @@
 </div>
 
 <script>
-const track = document.getElementById("track");
-const slides = document.querySelectorAll(".track img");
-const dotsContainer = document.getElementById("dots");
+window.addEventListener('load', () => {  // wait until all images are loaded
+  const track = document.getElementById("track");
+  const slides = document.querySelectorAll(".track img");
+  const dotsContainer = document.getElementById("dots");
+  let index = 0;
 
-let index = 0;
-
-// Create dots
-slides.forEach((_, i) => {
-  const dot = document.createElement("span");
-  if(i === 0) dot.classList.add("active");
-  dot.addEventListener("click", () => {
-    index = i;
-    updateCarousel();
+  // Create dots
+  slides.forEach((_, i) => {
+    const dot = document.createElement("span");
+    if (i === 0) dot.classList.add("active");
+    dot.addEventListener("click", () => {
+      index = i;
+      updateCarousel();
+    });
+    dotsContainer.appendChild(dot);
   });
-  dotsContainer.appendChild(dot);
-});
 
-// Update carousel position and dots
-function updateCarousel() {
-  const slideWidth = slides[0].clientWidth;
-  track.style.transform = `translateX(-${index * slideWidth}px)`;
+  function updateCarousel() {
+    const slideWidth = slides[0].clientWidth; // now guaranteed to be correct
+    track.style.transform = `translateX(-${index * slideWidth}px)`;
 
-  const dots = dotsContainer.querySelectorAll("span");
-  dots.forEach(dot => dot.classList.remove("active"));
-  dots[index].classList.add("active");
-}
+    const dots = dotsContainer.querySelectorAll("span");
+    dots.forEach(dot => dot.classList.remove("active"));
+    dots[index].classList.add("active");
+  }
 
-// Move carousel
-function move(dir) {
-  index += dir;
-  if(index < 0) index = slides.length - 1;
-  if(index >= slides.length) index = 0;
+  function move(dir) {
+    index += dir;
+    if (index < 0) index = slides.length - 1;
+    if (index >= slides.length) index = 0;
+    updateCarousel();
+  }
+
+  // Initialize
   updateCarousel();
-}
 
-// Autoplay
-setInterval(() => move(1), 4000);
+  // Buttons
+  document.querySelector(".prev").addEventListener("click", () => move(-1));
+  document.querySelector(".next").addEventListener("click", () => move(1));
 
-// Handle window resize
-window.addEventListener("resize", updateCarousel);
+  // Autoplay
+  setInterval(() => move(1), 4000);
+
+  // Responsive
+  window.addEventListener("resize", updateCarousel);
+});
 </script>
 </body>
 </html>

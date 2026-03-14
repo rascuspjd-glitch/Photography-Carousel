@@ -13,6 +13,7 @@ display:flex;
 justify-content:center;
 align-items:center;
 height:100vh;
+font-family:Arial;
 }
 
 .carousel{
@@ -77,14 +78,14 @@ background:white;
 
 <div class="track" id="track">
 
-<img src="https://drive.google.com/uc?export=view&id=14IRcLz32-JKd2XAjfjgRSle8f6biYcoZ">
-<img src="https://drive.google.com/uc?export=view&id=1jeVmIqE32_VCnRQsr17VGBv-IQNtIHM5">
-<img src="https://drive.google.com/uc?export=view&id=17Cwb6m4sHRu4B_LoCdeX65JXoPM-QTVT">
-<img src="https://drive.google.com/uc?export=view&id=1HWNN5XlIxgrSb-pI8xRzZjHNRhJpm3Em">
-<img src="https://drive.google.com/uc?export=view&id=1kQHi3BI8fNSrkgNYCi-BJ9qHaktJppE3">
-<img src="https://drive.google.com/uc?export=view&id=1FOQf41Vg4TLJ8Gj8ehVFTwGzVXGGv0mn">
-<img src="https://drive.google.com/uc?export=view&id=10YMKqi0w9pQRiPDeZYMjT0jh77zacWrw">
-<img src="https://drive.google.com/uc?export=view&id=1QPnjWjVx8wotqCO24XlpvBUaQt1xGrZ9">
+<img src="Image1.jpg">
+<img src="Image2.jpg">
+<img src="Image3.jpg">
+<img src="Image4.jpg">
+<img src="Image5.jpg">
+<img src="Image6.jpg">
+<img src="Image7.jpg">
+<img src="Image8.jpg">
 
 </div>
 
@@ -105,6 +106,7 @@ let index=0
 
 slides.forEach((_,i)=>{
 const dot=document.createElement("span")
+
 if(i===0) dot.classList.add("active")
 
 dot.onclick=()=>{

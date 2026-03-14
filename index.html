@@ -1,53 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Image Carousel</title>
+<title>Photography Carousel</title>
 
 <style>
 
 body{
 margin:0;
-font-family:Arial, sans-serif;
-background:#f4f4f4;
+background:#111;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
 }
 
 .carousel{
-position:relative;
-max-width:900px;
-margin:auto;
+width:900px;
 overflow:hidden;
+position:relative;
 border-radius:10px;
 }
 
-.carousel-track{
+.track{
 display:flex;
 transition:transform .5s ease;
 }
 
-.carousel img{
-width:100%;
+.track img{
+width:900px;
 flex-shrink:0;
 }
 
-.carousel-btn{
+button{
 position:absolute;
 top:50%;
 transform:translateY(-50%);
-background:rgba(0,0,0,.5);
-border:none;
+background:rgba(0,0,0,.6);
 color:white;
-font-size:28px;
+border:none;
+font-size:30px;
 padding:10px 16px;
 cursor:pointer;
-border-radius:6px;
 }
 
 .prev{left:10px;}
 .next{right:10px;}
 
-.carousel-dots{
+.dots{
 position:absolute;
 bottom:15px;
 left:50%;
@@ -56,15 +56,15 @@ display:flex;
 gap:8px;
 }
 
-.carousel-dots span{
+.dots span{
 width:12px;
 height:12px;
-background:#ccc;
+background:#bbb;
 border-radius:50%;
 cursor:pointer;
 }
 
-.carousel-dots span.active{
+.dots .active{
 background:white;
 }
 
@@ -75,10 +75,7 @@ background:white;
 
 <div class="carousel">
 
-<div class="carousel-track" id="track">
-
-<!-- clone last -->
-<img src="https://drive.google.com/uc?export=view&id=10YMKqi0w9pQRiPDeZYMjT0jh77zacWrw">
+<div class="track" id="track">
 
 <img src="https://drive.google.com/uc?export=view&id=14IRcLz32-JKd2XAjfjgRSle8f6biYcoZ">
 <img src="https://drive.google.com/uc?export=view&id=1jeVmIqE32_VCnRQsr17VGBv-IQNtIHM5">
@@ -89,109 +86,59 @@ background:white;
 <img src="https://drive.google.com/uc?export=view&id=10YMKqi0w9pQRiPDeZYMjT0jh77zacWrw">
 <img src="https://drive.google.com/uc?export=view&id=1QPnjWjVx8wotqCO24XlpvBUaQt1xGrZ9">
 
-<!-- clone first -->
-<img src="https://drive.google.com/uc?export=view&id=14IRcLz32-JKd2XAjfjgRSle8f6biYcoZ">
-
 </div>
 
-<button class="carousel-btn prev">❮</button>
-<button class="carousel-btn next">❯</button>
+<button class="prev" onclick="move(-1)">❮</button>
+<button class="next" onclick="move(1)">❯</button>
 
-<div class="carousel-dots" id="dots"></div>
+<div class="dots" id="dots"></div>
 
 </div>
 
 <script>
 
-const track = document.getElementById("track")
-const slides = track.querySelectorAll("img")
-const prev = document.querySelector(".prev")
-const next = document.querySelector(".next")
-const dotsContainer = document.getElementById("dots")
+const track=document.getElementById("track")
+const slides=document.querySelectorAll(".track img")
+const dots=document.getElementById("dots")
 
-const realSlideCount = slides.length - 2
+let index=0
 
-let index = 1
-let slideWidth = slides[0].clientWidth
-
-track.style.transform = `translateX(-${slideWidth * index}px)`
-
-function createDots(){
-for(let i=0;i<realSlideCount;i++){
+slides.forEach((_,i)=>{
 const dot=document.createElement("span")
-
 if(i===0) dot.classList.add("active")
 
-dot.addEventListener("click",()=>{
-index=i+1
-moveCarousel()
+dot.onclick=()=>{
+index=i
+update()
+}
+
+dots.appendChild(dot)
 })
 
-dotsContainer.appendChild(dot)
-}
-}
+function update(){
 
-createDots()
+track.style.transform=`translateX(-${index*900}px)`
 
-function updateDots(){
+document.querySelectorAll(".dots span")
+.forEach(d=>d.classList.remove("active"))
 
-const dots=dotsContainer.querySelectorAll("span")
-dots.forEach(dot=>dot.classList.remove("active"))
-
-let dotIndex=index-1
-
-if(dotIndex<0) dotIndex=realSlideCount-1
-if(dotIndex>=realSlideCount) dotIndex=0
-
-dots[dotIndex].classList.add("active")
+dots.children[index].classList.add("active")
 
 }
 
-function moveCarousel(){
+function move(dir){
 
-slideWidth=slides[0].clientWidth
+index+=dir
 
-track.style.transition="transform .5s ease"
-track.style.transform=`translateX(-${slideWidth * index}px)`
+if(index<0) index=slides.length-1
+if(index>=slides.length) index=0
 
-updateDots()
+update()
 
 }
-
-next.onclick=()=>{
-index++
-moveCarousel()
-}
-
-prev.onclick=()=>{
-index--
-moveCarousel()
-}
-
-track.addEventListener("transitionend",()=>{
-
-if(index===slides.length-1){
-track.style.transition="none"
-index=1
-track.style.transform=`translateX(-${slideWidth * index}px)`
-}
-
-if(index===0){
-track.style.transition="none"
-index=slides.length-2
-track.style.transform=`translateX(-${slideWidth * index}px)`
-}
-
-})
-
-window.addEventListener("resize",()=>{
-slideWidth=slides[0].clientWidth
-track.style.transform=`translateX(-${slideWidth * index}px)`
-})
 
 setInterval(()=>{
-index++
-moveCarousel()
+move(1)
 },4000)
 
 </script>
